@@ -22,13 +22,16 @@ module.exports = {
   },
   get: (url, token) => {
     const headers = authenticated(token);
-    log('GET', url);
     return fetch(url, { headers }).then(checkStatus).then(r => r.json());
   },
   post: (url, token, payload) => {
-    log('POST', url, payload);
     const headers = authenticated(token);
     return fetch(url, { method: 'post', body: JSON.stringify(payload), headers })
+      .then(checkStatus).then(r => r.json());
+  },
+  put: (url, token, payload) => {
+    const headers = authenticated(token);
+    return fetch(url, { method: 'put', body: JSON.stringify(payload), headers })
       .then(checkStatus).then(r => r.json());
   },
 };

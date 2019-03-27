@@ -1,4 +1,4 @@
-const { list, create } = require('../src/workload');
+const { list, create, update } = require('../src/workload');
 
 const { log } = console;
 
@@ -76,7 +76,7 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
     // log(workloads);
     log('found', workloads.length, 'workloads!', workloads.map(n => n.id));
 
-    return Promise.all([
+    const created = await Promise.all([
       { name: 'graphql', containers: [containerSpecGraphQL] },
       { name: 'website', containers: [containerSpecWebsite] },
     ].map(async ({ name, containers }) => {
@@ -95,6 +95,18 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
       }
       return { name, workload: filtered[0] };
     }));
+
+    const workloadId = created[0].id || 'deployment:test-namespace:graphql';
+    const payload = {
+      uri,
+      token,
+      projectId,
+      workloadId,
+      containers: [containerSpecGraphQL],
+    };
+    payload.containers[0].environment.UPDATED = 'true';
+    created.push({ name: 'graphql-updated', workload: await update(payload) });
+    return created;
 
     //
   } catch (e) {
