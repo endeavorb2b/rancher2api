@@ -16,6 +16,8 @@ All methods require at *minimum* a Rancher 2.x v3 API URL (such as `https://cows
 - [Namespace.list()](#namespace.list)
 - [Project.create()](#project.create)
 - [Project.list()](#project.list)
+- [Service.create()](#service.create)
+- [Service.list()](#service.list)
 - [Workload.create()](#workload.create)
 - [Workload.list()](#workload.list)
 - [Workload.update()](#workload.update)
@@ -42,6 +44,19 @@ Returns an array of project objects ({ id, name }).
 Parameters: `({ uri, token, clusterId, name })`
 
 Creates and returns a project object ({ id, name }).
+
+## Service
+Supported: `List` and `Create`.
+
+#### service.list
+Parameters: `({ uri, token, projectId })`
+
+Returns an array of service objects ({ id, name }).
+
+#### service.create
+Parameters: `({ uri, token, projectId, namespaceId, name, targetWorkloadIds })`
+
+Creates and returns a service object ({ id, name }).
 
 ## Namespace
 Supported: `List` and `Create`.

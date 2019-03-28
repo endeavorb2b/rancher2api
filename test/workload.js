@@ -105,7 +105,9 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
       containers: [containerSpecGraphQL],
     };
     payload.containers[0].environment.UPDATED = 'true';
-    created.push({ name: 'graphql-updated', workload: await update(payload) });
+
+    log('Updating service');
+    await update(payload);
     return created;
 
     //

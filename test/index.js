@@ -3,6 +3,7 @@ const project = require('./project');
 const namespace = require('./namespace');
 const workload = require('./workload');
 const ingress = require('./ingress');
+const service = require('./service');
 
 const { log } = console;
 const uri = process.env.RANCHER_URL;
@@ -27,6 +28,11 @@ const main = async () => {
   const workloads = await workload(uri, token, clusterId, projectId, namespaceId);
   const workloadIds = workloads.map(({ workload: w }) => w.id);
   log('workloads', workloadIds);
+
+  // Test service methods
+  const w = workloads.map(({ workload: wo }) => wo);
+  const services = await service(uri, token, projectId, namespaceId, w);
+  log('services', services);
 
   // Test ingress methods
   const balancer = await ingress(uri, token, clusterId, projectId, namespaceId, workloadIds);

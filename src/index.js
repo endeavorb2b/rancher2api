@@ -2,6 +2,7 @@ const cluster = require('./cluster');
 const ingress = require('./ingress');
 const namespace = require('./namespace');
 const project = require('./project');
+const service = require('./service');
 const workload = require('./workload');
 
 module.exports = {
@@ -9,5 +10,6 @@ module.exports = {
   ingress,
   namespace,
   project,
+  service,
   workload,
 };
