@@ -120,6 +120,42 @@ Updates and returns a workload object ({ id, deploymentId, name, ... }) within a
 }
 ```
 
+## Ingress
+Supported: `List`, `Create`, and `Update`.
+
+#### ingress.list
+Parameters: `({ uri, token, projectId })`
+
+Returns an array of ingress objects ({ id, name }).
+
+#### ingress.create
+Parameters: `({ uri, token, projectId, namespaceId, name, rules })`
+
+Creates and returns a ingress object ({ id, name, ... }) within a project+namespace.
+
+`rules` must be an array of rule objects specifying the port and workloadIds. The URI `path` is optional:
+```js
+{
+  path: '/test2/test2',
+  targetPort: 80,
+  workloadIds: [ 'deployment:<namespaceId>:<workloadName>'],
+}
+```
+
+#### ingress.update
+Parameters: `({ uri, token, projectId, ingressId, rules })`
+
+Updates and returns a ingress object ({ id, name, ... }) within a project+namespace.
+
+`rules` must be an array of rule objects specifying the port and workloadIds. The URI `path` is optional:
+```js
+{
+  path: '/test2/test2',
+  targetPort: 80,
+  workloadIds: [ 'deployment:<namespaceId>:<workloadName>'],
+}
+```
+
 ----
 
 ## Contributing
