@@ -7,37 +7,65 @@ This library can be included in your project to allow native access to the Ranch
 
 All methods require at *minimum* a Rancher 2.x v3 API URL (such as `https://cows.my-doma.in/api/v3`) and a Rancher 2.x API key. While scoped keys are supported, this library assumes a hard dependancy of knowing the cluster ID at runtime. The `Bearer Token` format should be passed to the library methods (`username:secretKey`.)
 
+## Methods
+- [Cluster.list()](#cluster.list)
+- [Ingress.create()](#ingress.create)
+- [Ingress.list()](#ingress.list)
+- [Ingress.update()](#ingress.update)
+- [Namespace.create()](#namespace.create)
+- [Namespace.list()](#namespace.list)
+- [Project.create()](#project.create)
+- [Project.list()](#project.list)
+- [Workload.create()](#workload.create)
+- [Workload.list()](#workload.list)
+- [Workload.update()](#workload.update)
+
+----
+
 ## Cluster
 Supported: `List`.
 
-#### cluster.list(uri, token)
+#### cluster.list
+Parameters: `(uri, token)`
+
 Returns an array of cluster objects ({ id, name }).
 
 ## Project
 Supported: `List` and `Create`.
 
-#### project.list({ uri, token, clusterId })
+#### project.list
+Parameters: `({ uri, token, clusterId })`
+
 Returns an array of project objects ({ id, name }).
 
-#### project.create({ uri, token, clusterId, name })
+#### project.create
+Parameters: `({ uri, token, clusterId, name })`
+
 Creates and returns a project object ({ id, name }).
 
 ## Namespace
 Supported: `List` and `Create`.
 
-#### namespace.list({ uri, token, clusterId })
+#### namespace.list
+Parameters: `({ uri, token, clusterId })`
 Returns an array of namespace objects ({ id, name }).
 
-#### namespace.create({ uri, token, clusterId, projectId, name })
+#### namespace.create
+Parameters: `({ uri, token, clusterId, projectId, name })`
+
 Creates and returns a namespace object ({ id, name }) within a project.
 
 ## Workload
-Supported: `List` and `Create`.
+Supported: `List`, `Create`, and `Update`.
 
-#### workload.list({ uri, token, projectId })
+#### workload.list
+Parameters: `({ uri, token, projectId })`
+
 Returns an array of workload objects ({ id, deploymentId, name }).
 
-#### workload.create({ uri, token, projectId, namespaceId, name, deploymentConfig, containers })
+#### workload.create
+Parameters: `({ uri, token, projectId, namespaceId, name, deploymentConfig, containers })`
+
 Creates and returns a workload object ({ id, deploymentId, name, ... }) within a project+namespace.
 
 `deploymentConfig`, if not specified, will default to the following:
@@ -74,6 +102,25 @@ Creates and returns a workload object ({ id, deploymentId, name, ... }) within a
   tty: true,
 }]
 ```
+
+#### workload.update
+Parameters: `({ uri, token, projectId, workloadId, deploymentConfig, containers })`
+
+Updates and returns a workload object ({ id, deploymentId, name, ... }) within a project+namespace.
+
+`deploymentConfig`, if not specified, will default to the following:
+```js
+{
+  maxSurge: 1,
+  maxUnavailable: 0,
+  minReadySeconds: 0,
+  progressDeadlineSeconds: 600,
+  revisionHistoryLimit: 10,
+  strategy: 'RollingUpdate',
+}
+```
+
+----
 
 ## Contributing
 

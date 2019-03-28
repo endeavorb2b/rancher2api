@@ -1,4 +1,4 @@
-const { list, create } = require('../src/ingress');
+const { list, create, update } = require('../src/ingress');
 
 const { log } = console;
 
@@ -71,8 +71,25 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
     };
 
     const filtered = ingresses.filter(i => i.name === createProps.name);
-    const ingress = filtered.length ? filtered[0] : await create(createProps);
-    return ingress;
+    const { id: ingressId } = filtered.length ? filtered[0] : await create(createProps);
+
+    const updatedRules = createProps.rules;
+    updatedRules[0].paths.push({
+      path: '/test2/test2',
+      targetPort,
+      workloadIds: gqlIds,
+    });
+
+    const updateProps = {
+      uri,
+      token,
+      projectId,
+      ingressId,
+      rules: updatedRules,
+    };
+
+    const updated = await update(updateProps);
+    return updated;
 
     //
   } catch (e) {

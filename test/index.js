@@ -30,7 +30,7 @@ const main = async () => {
 
   // Test ingress methods
   const balancer = await ingress(uri, token, clusterId, projectId, namespaceId, workloadIds);
-  log('ingresses', balancer);
+  log('ingress', balancer.id);
 
   //
 };
