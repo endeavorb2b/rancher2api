@@ -4,5 +4,5 @@ module.exports = async ({ uri, token, projectId }) => {
   validate({ uri, token, projectId });
   const url = `${uri}/projects/${projectId}/workloads`;
   const { data } = await get(url, token);
-  return data.map(({ id, deploymentId, name }) => ({ id, deploymentId, name }));
+  return data;
 };
