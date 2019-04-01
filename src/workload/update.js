@@ -1,13 +1,8 @@
-const { validate, put } = require('../common');
-
-const configure = config => config || {
-  maxSurge: 1,
-  maxUnavailable: 0,
-  minReadySeconds: 0,
-  progressDeadlineSeconds: 600,
-  revisionHistoryLimit: 10,
-  strategy: 'RollingUpdate',
-};
+const {
+  validate,
+  put,
+  configure,
+} = require('../common');
 
 module.exports = async ({
   uri,
@@ -16,6 +11,7 @@ module.exports = async ({
   workloadId,
   deploymentConfig,
   containers = [],
+  labels = {},
 }) => {
   validate({
     uri,
@@ -28,6 +24,8 @@ module.exports = async ({
   const payload = {
     deploymentConfig: configure(deploymentConfig),
     containers,
+    labels,
   };
+  if (!Object.keys(labels).length) delete payload.labels;
   return put(url, token, payload);
 };

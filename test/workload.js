@@ -103,6 +103,10 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
       projectId,
       workloadId,
       containers: [containerSpecGraphQL],
+      // labels: {
+      //   'workload.user.cattle.io/workloadselector': `deployment-${namespaceId}-graphql`,
+      //   updated: 'true',
+      // },
     };
     payload.containers[0].environment.UPDATED = 'true';
 

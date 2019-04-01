@@ -1,36 +1,10 @@
-const { validate, post } = require('../common');
-
-// Ensure minimum configs are met.
-const configure = config => config || {
-  maxSurge: 1,
-  maxUnavailable: 0,
-  minReadySeconds: 0,
-  progressDeadlineSeconds: 600,
-  revisionHistoryLimit: 10,
-  strategy: 'RollingUpdate',
-};
-const containerize = (containers = [], name) => {
-  if (Array.isArray(containers) && containers[0].image) return containers;
-  return [{
-    env: [],
-    image: 'busybox:latest',
-    imagePullPolicy: 'IfNotPresent',
-    name,
-    entrypoint: ['top'],
-    securityContext: {
-      allowPrivilegeEscalation: false,
-      capabilities: {},
-      privileged: false,
-      procMount: 'Default',
-      readOnlyRootFilesystem: false,
-      runAsNonRoot: false,
-    },
-    stdin: true,
-    terminationMessagePath: '/dev/termination-log',
-    terminationMessagePolicy: 'File',
-    tty: true,
-  }];
-};
+const {
+  validate,
+  post,
+  configure,
+  containerize,
+  label,
+} = require('../common');
 
 module.exports = async ({
   uri,
@@ -40,6 +14,7 @@ module.exports = async ({
   name,
   deploymentConfig,
   containers = [],
+  labels = {},
 }) => {
   validate({
     uri,
@@ -55,7 +30,9 @@ module.exports = async ({
     projectId,
     deploymentConfig: configure(deploymentConfig),
     containers: containerize(containers, name),
+    labels: label(labels, namespaceId, name),
   };
+  if (!Object.keys(labels).length) delete payload.labels;
   const { id, name: Name } = await post(url, token, payload);
   return { id, name: Name };
 };

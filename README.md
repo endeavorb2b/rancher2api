@@ -83,6 +83,13 @@ Parameters: `({ uri, token, projectId, namespaceId, name, deploymentConfig, cont
 
 Creates and returns a workload object ({ id, deploymentId, name, ... }) within a project+namespace.
 
+`labels`, if not specified, will default to the following:
+```js
+{
+  'workload.user.cattle.io/workloadselector': `deployment-${namespaceId}-${name}`
+}
+```
+
 `deploymentConfig`, if not specified, will default to the following:
 ```js
 {
@@ -122,6 +129,13 @@ Creates and returns a workload object ({ id, deploymentId, name, ... }) within a
 Parameters: `({ uri, token, projectId, workloadId, deploymentConfig, containers })`
 
 Updates and returns a workload object ({ id, deploymentId, name, ... }) within a project+namespace.
+
+`labels`, if specified, MUST include the following:
+```js
+{
+  'workload.user.cattle.io/workloadselector': `deployment-${namespaceId}-${name}`
+}
+```
 
 `deploymentConfig`, if not specified, will default to the following:
 ```js

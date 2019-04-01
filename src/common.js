@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 
 const { log } = console;
+const { isArray } = Array;
 
 const checkStatus = async (res) => {
   if (res.ok) return res; // res.status >= 200 && res.status < 300
@@ -33,5 +34,41 @@ module.exports = {
     const headers = authenticated(token);
     return fetch(url, { method: 'put', body: JSON.stringify(payload), headers })
       .then(checkStatus).then(r => r.json());
+  },
+
+  label: (labels = {}, namespace, name) => {
+    const workload = { 'workload.user.cattle.io/workloadselector': `deployment-${namespace}-${name}` };
+    return Object.assign({}, { ...labels }, { ...workload });
+  },
+
+  configure: config => config || {
+    maxSurge: 1,
+    maxUnavailable: 0,
+    minReadySeconds: 0,
+    progressDeadlineSeconds: 600,
+    revisionHistoryLimit: 10,
+    strategy: 'RollingUpdate',
+  },
+  containerize: (containers = [], name) => {
+    if (isArray(containers) && containers[0].image) return containers;
+    return [{
+      env: [],
+      image: 'busybox:latest',
+      imagePullPolicy: 'IfNotPresent',
+      name,
+      entrypoint: ['top'],
+      securityContext: {
+        allowPrivilegeEscalation: false,
+        capabilities: {},
+        privileged: false,
+        procMount: 'Default',
+        readOnlyRootFilesystem: false,
+        runAsNonRoot: false,
+      },
+      stdin: true,
+      terminationMessagePath: '/dev/termination-log',
+      terminationMessagePolicy: 'File',
+      tty: true,
+    }];
   },
 };

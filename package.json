@@ -1,6 +1,6 @@
 {
   "name": "@endeavorb2b/rancher2api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Rancher2 API library",
   "main": "src/index.js",
   "author": "solocommand <josh@limit0.io>",
