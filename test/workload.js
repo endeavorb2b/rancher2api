@@ -64,6 +64,21 @@ const containerSpecWebsite = {
   name: 'website',
 };
 
+const containerSpecCron = {
+  ...containerSpecs,
+  command: ['https://google.com', '-fsSL'],
+  image: 'appropriate/curl:latest',
+  name: 'cron',
+};
+
+const cronJobConfig = {
+  concurrencyPolicy: 'Allow',
+  failedJobsHistoryLimit: 10,
+  schedule: '* * * * *',
+  successfulJobsHistoryLimit: 10,
+  suspend: false,
+};
+
 module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
   try {
     log('Listing workloads');
@@ -79,7 +94,8 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
     const created = await Promise.all([
       { name: 'graphql', containers: [containerSpecGraphQL] },
       { name: 'website', containers: [containerSpecWebsite] },
-    ].map(async ({ name, containers }) => {
+      { name: 'cron', containers: [containerSpecCron], cronJobConfig },
+    ].map(async ({ name, containers, cronJobConfig: cron }) => {
       const filtered = workloads.filter(d => d.name === name);
       if (!filtered.length) {
         const createProps = {
@@ -89,6 +105,7 @@ module.exports = async (uri, token, clusterId, projectId, namespaceId) => {
           namespaceId,
           name,
           containers,
+          cronJobConfig: cron,
         };
         log('creating workload', name);
         return { name, workload: await create(createProps) };

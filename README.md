@@ -125,6 +125,17 @@ Creates and returns a workload object ({ id, deploymentId, name, ... }) within a
 }]
 ```
 
+`cronJobConfig`, if specified, should provide the following:
+```js
+{
+  concurrencyPolicy: 'Allow',
+  failedJobsHistoryLimit: 10,
+  schedule: '* * * * *', // A valid cron schedule
+  successfulJobsHistoryLimit: 10,
+  suspend: false,
+}
+```
+
 #### workload.update
 Parameters: `({ uri, token, projectId, workloadId, deploymentConfig, containers })`
 

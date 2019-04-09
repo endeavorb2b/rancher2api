@@ -15,6 +15,7 @@ module.exports = async ({
   deploymentConfig,
   containers = [],
   labels = {},
+  cronJobConfig,
 }) => {
   validate({
     uri,
@@ -31,6 +32,7 @@ module.exports = async ({
     deploymentConfig: configure(deploymentConfig),
     containers: containerize(containers, name),
     labels: label(labels, namespaceId, name),
+    cronJobConfig,
   };
   if (!Object.keys(labels).length) delete payload.labels;
   const { id, name: Name } = await post(url, token, payload);

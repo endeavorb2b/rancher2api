@@ -12,6 +12,7 @@ module.exports = async ({
   deploymentConfig,
   containers = [],
   labels = {},
+  cronJobConfig,
 }) => {
   validate({
     uri,
@@ -25,6 +26,7 @@ module.exports = async ({
     deploymentConfig: configure(deploymentConfig),
     containers,
     labels,
+    cronJobConfig,
   };
   if (!Object.keys(labels).length) delete payload.labels;
   return put(url, token, payload);
